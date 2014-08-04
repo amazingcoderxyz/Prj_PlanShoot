@@ -1,5 +1,5 @@
 #忽略自动生成的工程文件
-#.metadata/
+.metadata/
 #.gitignore
 
 # built application files 

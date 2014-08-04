@@ -52,8 +52,10 @@ public class MainSurfaceView extends SurfaceView implements Callback,Runnable{
 	private Bitmap bmpEnemyBullet;
 	private Bitmap bmpBossBullet;
 	
-	//几个状态类对象
+	//几个场景类对象
 	private GameMenu gameMenu;
+	private GamePlayer gamePlayer;
+	private GameBackGround gameBg;
 	
 	public MainSurfaceView(Context context) {
 		super(context);
@@ -105,6 +107,10 @@ public class MainSurfaceView extends SurfaceView implements Callback,Runnable{
 			
 			//菜单
 			gameMenu = new GameMenu(bmpMenu, bmpBtnStart, bmpBtnStartPress);
+			//背景
+			gameBg = new GameBackGround(bmpBk);
+			//主角
+			gamePlayer = new GamePlayer(bmpPlayer, bmpPlayerHp);
 		}
 	}
 	
@@ -116,6 +122,7 @@ public class MainSurfaceView extends SurfaceView implements Callback,Runnable{
 		case GAME_MENU:
 			break;
 		case GAME_RUN:
+			gamePlayer.onKeyDown(keyCode, event);
 			break;
 		case GAME_PAUSE:
 			break;
@@ -136,6 +143,7 @@ public class MainSurfaceView extends SurfaceView implements Callback,Runnable{
 		case GAME_MENU:
 			break;
 		case GAME_RUN:
+			gamePlayer.onKeyUp(keyCode, event);
 			break;
 		case GAME_PAUSE:
 			break;
@@ -157,6 +165,7 @@ public class MainSurfaceView extends SurfaceView implements Callback,Runnable{
 			gameMenu.onTouchEvent(event);
 			break;
 		case GAME_RUN:
+			gamePlayer.onTouchEvent(event);
 			break;
 		case GAME_PAUSE:
 			break;
@@ -185,6 +194,8 @@ public class MainSurfaceView extends SurfaceView implements Callback,Runnable{
 					gameMenu.draw(canvas, paint);
 					break;
 				case GAME_RUN:
+					gameBg.draw(canvas, paint);
+					gamePlayer.draw(canvas, paint);
 					break;
 				case GAME_PAUSE:
 					break;
@@ -211,6 +222,8 @@ public class MainSurfaceView extends SurfaceView implements Callback,Runnable{
 		case GAME_MENU:
 			break;
 		case GAME_RUN:
+			gameBg.logic();
+			gamePlayer.logic();
 			break;
 		case GAME_PAUSE:
 			break;

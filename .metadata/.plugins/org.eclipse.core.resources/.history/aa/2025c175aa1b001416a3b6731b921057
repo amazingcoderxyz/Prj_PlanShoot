@@ -1,0 +1,104 @@
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.view.KeyEvent;
+
+//游戏主角类
+public class GamePlayer {
+	private Bitmap bmpPlayer;
+	private Bitmap bmpHp;
+	private int posX,posY;
+	private int speed = 5;
+	//移动标识
+	private boolean isUp, isDown, isLeft, isRight;
+	private int Hp;
+	
+	public GamePlayer(Bitmap bmpPlayer, Bitmap bmpHp){
+		this.bmpPlayer = bmpPlayer;
+		this.bmpHp = bmpHp;
+		posX = MainSurfaceView.screenW /2 - bmpPlayer.getWidth()/2;
+		posY = MainSurfaceView.screenH - bmpPlayer.getHeight();
+		
+	}
+	
+	public void draw(Canvas canvas, Paint paint){
+		canvas.drawBitmap(bmpPlayer, posX, posY, paint);
+		for(int i=0; i<Hp; i++){
+			canvas.drawBitmap(bmpHp, i*bmpHp.getWidth(), MainSurfaceView.screenH-bmpHp.getHeight(), paint);
+		}
+	}
+	
+	public void onKeyDown(int keyCode, KeyEvent event){
+		if(keyCode == KeyEvent.KEYCODE_DPAD_UP){
+			isUp = true;
+		}
+		if(keyCode == KeyEvent.KEYCODE_DPAD_DOWN){
+			isDown = true;
+		}
+		if(keyCode == KeyEvent.KEYCODE_DPAD_LEFT){
+			isLeft = true;
+		}
+		if(keyCode == KeyEvent.KEYCODE_DPAD_RIGHT){
+			isRight = true;
+		}
+	}
+	
+	public void onKeyUp(int keyCode, KeyEvent event){
+		if(keyCode == KeyEvent.KEYCODE_DPAD_UP){
+			isUp = false;
+		}
+		if(keyCode == KeyEvent.KEYCODE_DPAD_DOWN){
+			isDown = false;
+		}
+		if(keyCode == KeyEvent.KEYCODE_DPAD_LEFT){
+			isLeft = false;
+		}
+		if(keyCode == KeyEvent.KEYCODE_DPAD_RIGHT){
+			isRight = false;
+		}
+	}
+	
+	public void logic(){
+		if(isLeft){
+			posX -= speed;
+		}
+		if(isRight){
+			posX += speed;
+		}
+		if(isUp){
+			posY -= speed;
+		}
+		if(isDown){
+			posY += speed;
+		}
+		
+		//左右出界
+		if(posX + bmpPlayer.getWidth() > MainSurfaceView.screenW){
+			posX = MainSurfaceView.screenW - bmpPlayer.getWidth();
+		}else if(posX < 0){
+			posX = 0;
+		}
+		
+		//上下出界
+		if(posY+ bmpPlayer.getWidth() > MainSurfaceView.screenH){
+			posY = MainSurfaceView.screenH - bmpPlayer.getHeight();
+		}else if(posY <0){
+			posY =0;
+		}
+	}
+	
+	public int getHp(){
+		return this.Hp;
+	}
+	
+	public void setHp(int hp){
+		this.Hp = hp;
+	}
+	
+	public boolean isDead(){
+		if(this.Hp <=0){
+			return true;
+		}
+		return false;
+	}
+}

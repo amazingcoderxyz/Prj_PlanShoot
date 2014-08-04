@@ -1,0 +1,7 @@
+package com.yunxi.planshoot;
+
+import android.view.SurfaceView;
+
+public class MainSurfaceView extends SurfaceView {
+
+}
