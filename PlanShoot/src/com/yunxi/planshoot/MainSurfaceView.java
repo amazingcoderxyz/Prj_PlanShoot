@@ -1,0 +1,259 @@
+package com.yunxi.planshoot;
+
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceHolder.Callback;
+import android.view.SurfaceView;
+
+public class MainSurfaceView extends SurfaceView implements Callback,Runnable{
+
+	private SurfaceHolder sfh;
+	private Paint paint;
+	private Canvas canvas;
+	public static int screenW;
+	public static int screenH;
+	private Thread mainThd;
+	boolean bflag;
+	
+	//游戏状态
+	public static final int GAME_MENU = 0;
+	public static final int GAME_RUN = 1;
+	public static final int GAME_PAUSE = 2;
+	public static final int GAME_LOST = 3;
+	public static final int GAME_WIN = 4;
+	
+	//初始
+	public static int gameState = GAME_MENU;
+	
+	//resource
+	private Resources res = this.getResources();
+	private Bitmap bmpBk;
+	private Bitmap bmpBtnStart;
+	private Bitmap bmpBtnStartPress;
+	private Bitmap bmpEnemyDuck;
+	private Bitmap bmpEnemyFly;
+	private Bitmap bmpEnemyBoss;
+	private Bitmap bmpGameWin;
+	private Bitmap bmpGameLost;
+	private Bitmap bmpPlayer;
+	private Bitmap bmpPlayerHp;
+	private Bitmap bmpMenu;
+	private Bitmap bmpBoom;
+	private Bitmap bmpBossBoom;
+	private Bitmap bmpBullet;
+	private Bitmap bmpEnemyBullet;
+	private Bitmap bmpBossBullet;
+	
+	//几个状态类对象
+	private GameMenu gameMenu;
+	
+	public MainSurfaceView(Context context) {
+		super(context);
+		// TODO Auto-generated constructor stub
+		sfh = this.getHolder();
+		sfh.addCallback(this);
+		paint = new Paint();
+		paint.setColor(Color.WHITE);
+		paint.setAntiAlias(true);
+		setFocusable(true);
+		setFocusableInTouchMode(true);
+		//设置背景常亮
+		this.setKeepScreenOn(true);
+	}
+
+
+	@Override
+	public void surfaceCreated(SurfaceHolder arg0) {
+		// TODO Auto-generated method stub
+		screenW=getWidth();
+		screenH=getHeight();
+		
+		initGame();
+		
+		bflag = true;
+		mainThd = new Thread(this);
+		mainThd.start();
+	}
+
+
+	private void initGame(){
+		if(gameState == GAME_MENU){
+			bmpBk = BitmapFactory.decodeResource(res, R.drawable.background);
+			bmpMenu = BitmapFactory.decodeResource(res, R.drawable.menu);
+			bmpBtnStart = BitmapFactory.decodeResource(res, R.drawable.button);
+			bmpBtnStartPress = BitmapFactory.decodeResource(res, R.drawable.button_press);
+			bmpGameWin = BitmapFactory.decodeResource(res, R.drawable.gamewin);
+			bmpGameLost = BitmapFactory.decodeResource(res, R.drawable.gamelost);
+			bmpPlayer = BitmapFactory.decodeResource(res, R.drawable.player);
+			bmpPlayerHp = BitmapFactory.decodeResource(res, R.drawable.hp);
+			bmpEnemyDuck = BitmapFactory.decodeResource(res, R.drawable.enemy_duck);
+			bmpEnemyFly = BitmapFactory.decodeResource(res, R.drawable.enemy_fly);
+			bmpEnemyBoss = BitmapFactory.decodeResource(res, R.drawable.enemy_pig);
+			bmpBullet = BitmapFactory.decodeResource(res, R.drawable.bullet);
+			bmpEnemyBullet= BitmapFactory.decodeResource(res, R.drawable.bullet_enemy);
+			bmpBossBullet= BitmapFactory.decodeResource(res, R.drawable.boosbullet);
+			bmpBoom = BitmapFactory.decodeResource(res, R.drawable.boom);
+			bmpBossBoom = BitmapFactory.decodeResource(res, R.drawable.boos_boom);
+			
+			//菜单
+			gameMenu = new GameMenu(bmpMenu, bmpBtnStart, bmpBtnStartPress);
+		}
+	}
+	
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		switch(gameState){
+		case GAME_MENU:
+			break;
+		case GAME_RUN:
+			break;
+		case GAME_PAUSE:
+			break;
+		case GAME_WIN:
+			break;
+		case GAME_LOST:
+			break;
+		default:
+				break;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		switch(gameState){
+		case GAME_MENU:
+			break;
+		case GAME_RUN:
+			break;
+		case GAME_PAUSE:
+			break;
+		case GAME_WIN:
+			break;
+		case GAME_LOST:
+			break;
+		default:
+				break;
+		}
+		return super.onKeyUp(keyCode, event);
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// TODO Auto-generated method stub
+		switch(gameState){
+		case GAME_MENU:
+			gameMenu.onTouchEvent(event);
+			break;
+		case GAME_RUN:
+			break;
+		case GAME_PAUSE:
+			break;
+		case GAME_WIN:
+			break;
+		case GAME_LOST:
+			break;
+		default:
+			break;
+		}
+		return true;
+		//return super.onTouchEvent(event);
+	}
+
+	
+	private void myDraw(){
+		try{
+			canvas = sfh.lockCanvas();
+			//canvas.drawText("PlanShootGame", 20, 20, paint);
+			if(canvas != null){
+				//刷屏
+				canvas.drawColor(Color.WHITE);
+				
+				switch(gameState){
+				case GAME_MENU:
+					gameMenu.draw(canvas, paint);
+					break;
+				case GAME_RUN:
+					break;
+				case GAME_PAUSE:
+					break;
+				case GAME_WIN:
+					break;
+				case GAME_LOST:
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		catch(Exception e){}
+		finally{
+			if(canvas != null){
+				sfh.unlockCanvasAndPost(canvas);
+			}
+		}
+		
+	}
+
+	private void logic(){
+		switch(gameState){
+		case GAME_MENU:
+			break;
+		case GAME_RUN:
+			break;
+		case GAME_PAUSE:
+			break;
+		case GAME_WIN:
+			break;
+		case GAME_LOST:
+			break;
+		default:
+			break;
+		}
+
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		while(bflag){
+			long start = System.currentTimeMillis();
+			myDraw();
+			logic();
+			long end = System.currentTimeMillis();
+			try{
+				if(end - start < 50){
+					Thread.sleep(50 - (end - start));
+				}
+			}
+			catch(InterruptedException e){
+				e.printStackTrace();
+			}
+		}			
+	}
+
+	@Override
+	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void surfaceDestroyed(SurfaceHolder arg0) {
+		// TODO Auto-generated method stub
+		bflag = false;
+	}
+}
+
+
